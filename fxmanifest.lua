@@ -4,7 +4,18 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 
 description 'rsg-horserace'
 
-client_script 'client/main.lua'
-server_script'server/main.lua'
+client_scripts {
+    'client/main.lua'
+}
+
+server_scripts {
+    'server/main.lua'
+}
+
+shared_scripts {
+    '@rsg-core/shared/locale.lua',
+    'locales/en.lua', -- Change this to your preferred language
+    'config.lua',
+}
 
 lua54 'yes'
