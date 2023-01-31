@@ -5,19 +5,14 @@ local RaceId = 0
 local ShowCountDown = false
 local RaceCount = 5
 
-local function DrawText3Ds(x, y, z, text)
+function DrawText3D(x, y, z, text)
+    local onScreen,_x,_y=GetScreenCoordFromWorldCoord(x, y, z)
     SetTextScale(0.35, 0.35)
- --   SetTextFont(4)
---    SetTextProportional(1)
- --   SetTextColour(255, 255, 255, 215)
---    SetTextEntry("STRING")
---    SetTextCentre(true)
---    AddTextComponentString(text)
---    SetDrawOrigin(x,y,z, 0)
---    DrawText(0.0, 0.0)
- --   local factor = (string.len(text)) / 370
---    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
- --   ClearDrawOrigin()
+    SetTextFontForCurrentCommand(9)
+    SetTextColor(255, 255, 255, 215)
+    local str = CreateVarString(10, "LITERAL_STRING", text, Citizen.ResultAsLong())
+    SetTextCentre(1)
+    DisplayText(str,_x,_y)
 end
 
 local function RaceCountDown()
@@ -46,7 +41,7 @@ CreateThread(function()
                     if Races[k] ~= nil then
                         if #(pos - vector3(Races[k].startx, Races[k].starty, Races[k].startz)) < 15.0 and not Races[k].started then
                             sleep = 0
-                            DrawText3Ds(Races[k].startx, Races[k].starty, Races[k].startz, "[~g~H~w~] To Join The Race (~g~$"..Races[k].amount..",-~w~)")
+                            DrawText3D(Races[k].startx, Races[k].starty, Races[k].startz, "[~g~H~w~] To Join The Race (~g~$"..Races[k].amount..",-~w~)")
                             if IsControlJustReleased(0, 45) then --R
                                 TriggerServerEvent("rsg-horseraces:JoinRace", k)
                             end
@@ -59,14 +54,14 @@ CreateThread(function()
             if RaceId ~= 0 and not InRace then
                 if #(pos - vector3(Races[RaceId].startx, Races[RaceId].starty, Races[RaceId].startz)) < 15.0 and not Races[RaceId].started then
                     sleep = 0
-                    DrawText3Ds(Races[RaceId].startx, Races[RaceId].starty, Races[RaceId].startz, "Race Will Start Soon")
+                    DrawText3D(Races[RaceId].startx, Races[RaceId].starty, Races[RaceId].startz, "Race Will Start Soon")
                 end
             end
             -- In race and started
             if RaceId ~= 0 and InRace then
                 if #(pos - vector3(Races[RaceId].endx, Races[RaceId].endy, pos.z)) < 250.0 and Races[RaceId].started then
                     sleep = 0
-                    DrawText3Ds(Races[RaceId].endx, Races[RaceId].endy, pos.z + 0.98, "FINISH")
+                    DrawText3D(Races[RaceId].endx, Races[RaceId].endy, pos.z + 0.98, "FINISH")
                     if #(pos - vector3(Races[RaceId].endx, Races[RaceId].endy, pos.z)) < 15.0 then
                         TriggerServerEvent("rsg-horseraces:RaceWon", RaceId)
                         InRace = false
@@ -77,7 +72,7 @@ CreateThread(function()
             if ShowCountDown then
                 if #(pos - vector3(Races[RaceId].startx, Races[RaceId].starty, Races[RaceId].startz)) < 15.0 and Races[RaceId].started then
                     sleep = 0
-                    DrawText3Ds(Races[RaceId].startx, Races[RaceId].starty, Races[RaceId].startz, "Race start in ~g~"..RaceCount)
+                    DrawText3D(Races[RaceId].startx, Races[RaceId].starty, Races[RaceId].startz, "Race start in ~g~"..RaceCount)
                 end
             end
         end
@@ -145,7 +140,6 @@ end)
 
 RegisterNetEvent('rsg-horseraces:SetRaceId', function(race)
     RaceId = race
- --  SetNewWaypoint(Races[RaceId].endx, Races[RaceId].endy)
     StartGpsMultiRoute(6, true, true)
     AddPointToGpsMultiRoute(Races[RaceId].endx, Races[RaceId].endy)
     SetGpsMultiRouteRender(true)
