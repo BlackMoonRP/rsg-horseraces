@@ -5,11 +5,11 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 description 'rsg-horserace'
 
 client_scripts {
-    'client/main.lua'
+    'client/client.lua'
 }
 
 server_scripts {
-    'server/main.lua'
+    'server/server.lua'
 }
 
 shared_scripts {
